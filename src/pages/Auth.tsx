@@ -1,21 +1,74 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Sparkles } from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
+import { useToast } from "@/hooks/use-toast";
 
 const Auth = () => {
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [fullName, setFullName] = useState("");
+  const [loading, setLoading] = useState(false);
+  const { user, signIn, signUp, signInWithGoogle } = useAuth();
+  const { toast } = useToast();
+  const navigate = useNavigate();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  useEffect(() => {
+    if (user) {
+      navigate('/dashboard');
+    }
+  }, [user, navigate]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Authentication logic will be added later
-    console.log("Auth submit:", { email, password, isLogin });
+    setLoading(true);
+
+    try {
+      if (isLogin) {
+        const { error } = await signIn(email, password);
+        if (error) throw error;
+        toast({
+          title: "Giriş başarılı!",
+          description: "Dashboard'a yönlendiriliyorsunuz..."
+        });
+      } else {
+        const { error } = await signUp(email, password, fullName);
+        if (error) throw error;
+        toast({
+          title: "Kayıt başarılı!",
+          description: "Hesabınız oluşturuldu. Giriş yapabilirsiniz."
+        });
+      }
+    } catch (error: any) {
+      toast({
+        title: "Hata",
+        description: error.message || "Bir hata oluştu. Lütfen tekrar deneyin.",
+        variant: "destructive"
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleGoogleSignIn = async () => {
+    setLoading(true);
+    try {
+      const { error } = await signInWithGoogle();
+      if (error) throw error;
+    } catch (error: any) {
+      toast({
+        title: "Hata",
+        description: error.message || "Google ile giriş başarısız oldu.",
+        variant: "destructive"
+      });
+      setLoading(false);
+    }
   };
 
   return (
@@ -41,6 +94,20 @@ const Auth = () => {
           </CardHeader>
           <CardContent className="space-y-4">
             <form onSubmit={handleSubmit} className="space-y-4">
+              {!isLogin && (
+                <div className="space-y-2">
+                  <Label htmlFor="fullName">Ad Soyad</Label>
+                  <Input
+                    id="fullName"
+                    type="text"
+                    placeholder="Adınız Soyadınız"
+                    value={fullName}
+                    onChange={(e) => setFullName(e.target.value)}
+                    required
+                  />
+                </div>
+              )}
+
               <div className="space-y-2">
                 <Label htmlFor="email">E-posta</Label>
                 <Input
@@ -65,8 +132,8 @@ const Auth = () => {
                 />
               </div>
 
-              <Button type="submit" className="w-full" size="lg">
-                {isLogin ? "Giriş Yap" : "Hesap Oluştur"}
+              <Button type="submit" className="w-full" size="lg" disabled={loading}>
+                {loading ? "İşleniyor..." : (isLogin ? "Giriş Yap" : "Hesap Oluştur")}
               </Button>
             </form>
 
@@ -77,7 +144,7 @@ const Auth = () => {
               </span>
             </div>
 
-            <Button variant="outline" className="w-full" size="lg">
+            <Button variant="outline" className="w-full" size="lg" onClick={handleGoogleSignIn} disabled={loading}>
               <svg className="mr-2 h-4 w-4" viewBox="0 0 24 24">
                 <path
                   fill="currentColor"

@@ -1,24 +1,37 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { Input } from "@/components/ui/input";
 import Header from "@/components/Header";
 import { Upload, Sparkles, ChevronRight } from "lucide-react";
 import modelsGallery from "@/assets/models-gallery.jpg";
+import { useAuth } from "@/hooks/useAuth";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
 
 const Create = () => {
+  const { user } = useAuth();
+  const { toast } = useToast();
+  const navigate = useNavigate();
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string>("");
   const [selectedModel, setSelectedModel] = useState<string>("");
   const [selectedStyle, setSelectedStyle] = useState<string>("studio");
   const [prompt, setPrompt] = useState("");
+  const [productName, setProductName] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
       setSelectedFile(file);
       setPreviewUrl(URL.createObjectURL(file));
+      if (!productName) {
+        setProductName(file.name.split('.')[0]);
+      }
     }
   };
 
@@ -35,9 +48,80 @@ const Create = () => {
     { id: "minimal", name: "Minimalist", description: "Sade, beyaz arka plan" },
   ];
 
-  const handleGenerate = () => {
-    // Generation logic will be added later
-    console.log("Generate:", { selectedFile, selectedModel, selectedStyle, prompt });
+  const handleGenerate = async () => {
+    if (!selectedFile || !selectedModel || !user) {
+      toast({
+        title: "Eksik Bilgi",
+        description: "Lütfen ürün görseli ve model seçin.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      // Upload product image
+      const fileName = `${user.id}/${Date.now()}_${selectedFile.name}`;
+      const { data: uploadData, error: uploadError } = await supabase.storage
+        .from('product-images')
+        .upload(fileName, selectedFile);
+
+      if (uploadError) throw uploadError;
+
+      const { data: { publicUrl } } = supabase.storage
+        .from('product-images')
+        .getPublicUrl(fileName);
+
+      // Create project
+      const { data: projectData, error: projectError } = await supabase
+        .from('projects')
+        .insert({
+          user_id: user.id,
+          name: productName || 'Yeni Proje',
+          product_image_url: publicUrl,
+          model_id: selectedModel,
+          style_id: selectedStyle,
+          prompt: prompt || null,
+          status: 'pending'
+        })
+        .select()
+        .single();
+
+      if (projectError) throw projectError;
+
+      // Call edge function to generate image
+      const { data: functionData, error: functionError } = await supabase.functions.invoke('generate-image', {
+        body: {
+          projectId: projectData.id,
+          productImageUrl: publicUrl,
+          modelId: selectedModel,
+          styleId: selectedStyle,
+          prompt: prompt
+        }
+      });
+
+      if (functionError) throw functionError;
+
+      toast({
+        title: "Başarılı!",
+        description: "Görseliniz oluşturuldu. Dashboard'a yönlendiriliyorsunuz..."
+      });
+
+      setTimeout(() => {
+        navigate('/dashboard');
+      }, 1500);
+
+    } catch (error: any) {
+      console.error('Generation error:', error);
+      toast({
+        title: "Hata",
+        description: error.message || "Görsel oluşturulurken bir hata oluştu.",
+        variant: "destructive"
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -90,6 +174,16 @@ const Create = () => {
                           src={previewUrl} 
                           alt="Yüklenen ürün" 
                           className="w-full h-full object-cover"
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="productName">Ürün Adı</Label>
+                        <Input
+                          id="productName"
+                          type="text"
+                          value={productName}
+                          onChange={(e) => setProductName(e.target.value)}
+                          placeholder="Ürün adını girin"
                         />
                       </div>
                       <Button 
@@ -196,7 +290,7 @@ const Create = () => {
                   <div className="flex items-center justify-between py-3 border-b border-border">
                     <span className="text-sm text-muted-foreground">Ürün</span>
                     <span className="font-medium">
-                      {selectedFile ? selectedFile.name : "Seçilmedi"}
+                      {selectedFile ? productName || selectedFile.name : "Seçilmedi"}
                     </span>
                   </div>
                   
@@ -216,19 +310,18 @@ const Create = () => {
                   
                   <div className="flex items-center justify-between py-3">
                     <span className="text-sm text-muted-foreground">Kredi Kullanımı</span>
-                    <span className="font-semibold text-primary">-5 kredi</span>
+                    <span className="font-semibold text-primary">-1 kredi</span>
                   </div>
                 </div>
 
                 <Button 
                   size="lg" 
-                  variant="hero" 
                   className="w-full"
-                  disabled={!selectedFile || !selectedModel}
+                  disabled={!selectedFile || !selectedModel || loading}
                   onClick={handleGenerate}
                 >
                   <Sparkles className="mr-2 h-5 w-5" />
-                  Görseli Oluştur
+                  {loading ? "Oluşturuluyor..." : "Görseli Oluştur"}
                   <ChevronRight className="ml-2 h-5 w-5" />
                 </Button>
 

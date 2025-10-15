@@ -1,8 +1,17 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Sparkles } from "lucide-react";
+import { Sparkles, User, LogOut } from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 const Header = () => {
+  const { user, signOut } = useAuth();
+
   return (
     <header className="border-b border-border bg-background/80 backdrop-blur-sm sticky top-0 z-50">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -19,18 +28,39 @@ const Header = () => {
             <Link to="/pricing" className="text-sm font-medium text-foreground hover:text-primary transition-colors">
               Fiyatlandırma
             </Link>
-            <Link to="/dashboard" className="text-sm font-medium text-foreground hover:text-primary transition-colors">
-              Dashboard
-            </Link>
+            {user && (
+              <Link to="/dashboard" className="text-sm font-medium text-foreground hover:text-primary transition-colors">
+                Dashboard
+              </Link>
+            )}
           </nav>
           
           <div className="flex items-center gap-3">
-            <Button variant="ghost" size="sm" asChild>
-              <Link to="/auth">Giriş Yap</Link>
-            </Button>
-            <Button size="sm" asChild>
-              <Link to="/auth">Başla</Link>
-            </Button>
+            {user ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" size="sm">
+                    <User className="h-4 w-4 mr-2" />
+                    Hesabım
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem onClick={() => signOut()}>
+                    <LogOut className="mr-2 h-4 w-4" />
+                    Çıkış Yap
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : (
+              <>
+                <Button variant="ghost" size="sm" asChild>
+                  <Link to="/auth">Giriş Yap</Link>
+                </Button>
+                <Button size="sm" asChild>
+                  <Link to="/auth">Başla</Link>
+                </Button>
+              </>
+            )}
           </div>
         </div>
       </div>

@@ -3,22 +3,94 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import Header from "@/components/Header";
 import { Plus, Image as ImageIcon, Download } from "lucide-react";
-import sampleProduct from "@/assets/sample-product-1.jpg";
+import { useAuth } from "@/hooks/useAuth";
+import { supabase } from "@/integrations/supabase/client";
+import { useEffect, useState } from "react";
+import { useToast } from "@/hooks/use-toast";
+
+interface Project {
+  id: string;
+  name: string;
+  product_image_url: string;
+  created_at: string;
+  status: string;
+  generated_images: Array<{ image_url: string }>;
+}
 
 const Dashboard = () => {
-  // Mock data for demonstration
-  const projects = [
-    {
-      id: 1,
-      name: "Lacivert Kapşonlu Sweatshirt",
-      image: sampleProduct,
-      createdAt: "2 saat önce",
-      variants: 4
-    },
-    // Add more mock projects as needed
-  ];
+  const { user } = useAuth();
+  const { toast } = useToast();
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [credits, setCredits] = useState(0);
+  const [loading, setLoading] = useState(true);
 
-  const credits = 47;
+  useEffect(() => {
+    if (user) {
+      fetchData();
+    }
+  }, [user]);
+
+  const fetchData = async () => {
+    try {
+      // Fetch credits
+      const { data: creditsData, error: creditsError } = await supabase
+        .from('credits')
+        .select('balance')
+        .eq('user_id', user?.id)
+        .single();
+
+      if (creditsError) throw creditsError;
+      setCredits(creditsData?.balance || 0);
+
+      // Fetch projects with generated images
+      const { data: projectsData, error: projectsError } = await supabase
+        .from('projects')
+        .select(`
+          *,
+          generated_images (
+            image_url
+          )
+        `)
+        .eq('user_id', user?.id)
+        .order('created_at', { ascending: false });
+
+      if (projectsError) throw projectsError;
+      setProjects(projectsData || []);
+    } catch (error: any) {
+      toast({
+        title: "Hata",
+        description: error.message || "Veriler yüklenirken bir hata oluştu.",
+        variant: "destructive"
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    const now = new Date();
+    const diff = now.getTime() - date.getTime();
+    const hours = Math.floor(diff / (1000 * 60 * 60));
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+
+    if (hours < 1) return "Az önce";
+    if (hours < 24) return `${hours} saat önce`;
+    if (days === 1) return "Dün";
+    if (days < 7) return `${days} gün önce`;
+    return date.toLocaleDateString('tr-TR');
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Header />
+        <div className="container mx-auto px-4 py-12 text-center">
+          Yükleniyor...
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background">
@@ -42,7 +114,7 @@ const Dashboard = () => {
               </div>
             </Card>
             
-            <Button size="lg" variant="hero" asChild>
+            <Button size="lg" asChild>
               <Link to="/create">
                 <Plus className="mr-2 h-5 w-5" />
                 Yeni Görsel Oluştur
@@ -59,7 +131,7 @@ const Dashboard = () => {
             <p className="text-muted-foreground mb-6">
               İlk profesyonel görselinizi oluşturmaya başlayın
             </p>
-            <Button variant="hero" asChild>
+            <Button asChild>
               <Link to="/create">
                 <Plus className="mr-2 h-5 w-5" />
                 İlk Görselimi Oluştur
@@ -71,26 +143,43 @@ const Dashboard = () => {
             {projects.map((project) => (
               <Card key={project.id} className="group overflow-hidden hover:shadow-lg transition-shadow">
                 <div className="aspect-square relative overflow-hidden bg-secondary">
-                  <img 
-                    src={project.image} 
-                    alt={project.name}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                  />
-                  <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
-                    <Button size="sm" variant="secondary">
-                      Görüntüle
-                    </Button>
-                    <Button size="sm" variant="secondary">
-                      <Download className="h-4 w-4" />
-                    </Button>
-                  </div>
+                  {project.generated_images && project.generated_images.length > 0 ? (
+                    <img 
+                      src={project.generated_images[0].image_url} 
+                      alt={project.name}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    />
+                  ) : (
+                    <img 
+                      src={project.product_image_url} 
+                      alt={project.name}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    />
+                  )}
+                  {project.generated_images && project.generated_images.length > 0 && (
+                    <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+                      <a href={project.generated_images[0].image_url} target="_blank" rel="noopener noreferrer">
+                        <Button size="sm" variant="secondary">
+                          Görüntüle
+                        </Button>
+                      </a>
+                      <a href={project.generated_images[0].image_url} download>
+                        <Button size="sm" variant="secondary">
+                          <Download className="h-4 w-4" />
+                        </Button>
+                      </a>
+                    </div>
+                  )}
                 </div>
                 <CardContent className="p-4">
                   <h3 className="font-semibold truncate mb-1">{project.name}</h3>
                   <div className="flex items-center justify-between text-sm text-muted-foreground">
-                    <span>{project.variants} varyant</span>
-                    <span>{project.createdAt}</span>
+                    <span>{project.generated_images?.length || 0} görsel</span>
+                    <span>{formatDate(project.created_at)}</span>
                   </div>
+                  {project.status === 'pending' && (
+                    <div className="mt-2 text-xs text-amber-500">İşleniyor...</div>
+                  )}
                 </CardContent>
               </Card>
             ))}
