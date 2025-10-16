@@ -3,8 +3,8 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import Header from "@/components/Header";
 import { ArrowRight, Sparkles, Zap, Users, Check } from "lucide-react";
-import heroImage from "@/assets/hero-image.jpg";
-import modelsGallery from "@/assets/models-gallery.jpg";
+import heroImage from "@/assets/hero-image-new.jpg";
+import modelsGallery from "@/assets/models-gallery-new.jpg";
 
 const Index = () => {
   return (
@@ -54,13 +54,15 @@ const Index = () => {
               </div>
             </div>
             
-            <div className="relative">
-              <div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-accent/20 blur-3xl opacity-30"></div>
-              <img 
-                src={heroImage} 
-                alt="AI ile ürün görselleştirme örneği" 
-                className="relative rounded-2xl shadow-2xl"
-              />
+            <div className="relative group">
+              <div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-accent/20 blur-3xl opacity-30 group-hover:opacity-50 transition-opacity duration-500"></div>
+              <div className="relative overflow-hidden rounded-2xl shadow-2xl">
+                <img 
+                  src={heroImage} 
+                  alt="AI ile ürün görselleştirme - tişört görseli profesyonel modele giydiriliyor" 
+                  className="relative w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700"
+                />
+              </div>
             </div>
           </div>
         </div>
@@ -79,33 +81,33 @@ const Index = () => {
           </div>
           
           <div className="grid md:grid-cols-3 gap-8">
-            <Card className="p-8 hover:shadow-lg transition-shadow">
-              <div className="h-12 w-12 rounded-lg bg-primary/10 flex items-center justify-center mb-6">
-                <Zap className="h-6 w-6 text-primary" />
+            <Card className="p-8 hover:shadow-xl transition-all duration-300 hover:-translate-y-2 group border-2 hover:border-primary/50">
+              <div className="h-14 w-14 rounded-xl bg-gradient-to-br from-primary to-primary-hover flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300 shadow-lg">
+                <Zap className="h-7 w-7 text-primary-foreground" />
               </div>
-              <h3 className="text-xl font-semibold mb-3">Hızlı ve Kolay</h3>
+              <h3 className="text-xl font-semibold mb-3">Saniyeler İçinde Hazır</h3>
               <p className="text-muted-foreground">
-                Ürün fotoğrafınızı yükleyin, model seçin ve saniyeler içinde profesyonel görseller alın.
+                Ürününüzü yükleyin, kategorinizi ve modelinizi seçin. AI teknolojimiz 30-60 saniyede profesyonel görseller oluşturur.
               </p>
             </Card>
             
-            <Card className="p-8 hover:shadow-lg transition-shadow">
-              <div className="h-12 w-12 rounded-lg bg-primary/10 flex items-center justify-center mb-6">
-                <Users className="h-6 w-6 text-primary" />
+            <Card className="p-8 hover:shadow-xl transition-all duration-300 hover:-translate-y-2 group border-2 hover:border-accent/50">
+              <div className="h-14 w-14 rounded-xl bg-gradient-to-br from-accent to-accent-foreground flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300 shadow-lg">
+                <Users className="h-7 w-7 text-accent-foreground" />
               </div>
-              <h3 className="text-xl font-semibold mb-3">Çeşitli Modeller</h3>
+              <h3 className="text-xl font-semibold mb-3">Geniş Model Seçeneği</h3>
               <p className="text-muted-foreground">
-                Farklı etnik köken, cinsiyet ve stillerde modeller ile hedef kitlenize ulaşın.
+                Erkek, kadın, tam boy, üst beden, yüz ve el modelleri. Her ürün kategorisi için özel olarak seçilmiş profesyonel modeller.
               </p>
             </Card>
             
-            <Card className="p-8 hover:shadow-lg transition-shadow">
-              <div className="h-12 w-12 rounded-lg bg-primary/10 flex items-center justify-center mb-6">
-                <Sparkles className="h-6 w-6 text-primary" />
+            <Card className="p-8 hover:shadow-xl transition-all duration-300 hover:-translate-y-2 group border-2 hover:border-primary/50">
+              <div className="h-14 w-14 rounded-xl bg-gradient-to-br from-primary via-accent to-primary-hover flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300 shadow-lg">
+                <Sparkles className="h-7 w-7 text-primary-foreground" />
               </div>
-              <h3 className="text-xl font-semibold mb-3">Profesyonel Kalite</h3>
+              <h3 className="text-xl font-semibold mb-3">Stüdyo Kalitesi</h3>
               <p className="text-muted-foreground">
-                Yapay zeka destekli teknoloji ile gerçekçi ve yüksek çözünürlüklü sonuçlar.
+                Model, stüdyo veya fotoğrafçıya ihtiyaç yok. Yapay zeka ile fotoğraf çekimi maliyetini %90 azaltın, satışlarınızı artırın.
               </p>
             </Card>
           </div>
@@ -124,12 +126,15 @@ const Index = () => {
             </p>
           </div>
           
-          <div className="max-w-4xl mx-auto">
-            <img 
-              src={modelsGallery} 
-              alt="Çeşitli profesyonel modeller" 
-              className="rounded-2xl shadow-2xl"
-            />
+          <div className="max-w-5xl mx-auto">
+            <div className="relative group">
+              <div className="absolute inset-0 bg-gradient-to-r from-primary/10 to-accent/10 blur-2xl opacity-50"></div>
+              <img 
+                src={modelsGallery} 
+                alt="Profesyonel modeller - erkek, kadın, tam boy, üst beden, yüz ve el modelleri" 
+                className="relative rounded-2xl shadow-2xl transform group-hover:scale-[1.02] transition-transform duration-500"
+              />
+            </div>
           </div>
           
           <div className="text-center mt-12">
