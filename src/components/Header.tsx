@@ -54,10 +54,10 @@ const Header = () => {
             ) : (
               <>
                 <Button variant="ghost" size="sm" asChild>
-                  <Link to="/auth">Giriş Yap</Link>
+                  <Link to="/auth?mode=login">Giriş Yap</Link>
                 </Button>
                 <Button size="sm" asChild>
-                  <Link to="/auth">Başla</Link>
+                  <Link to="/auth?mode=signup">Ücretsiz Deneyin</Link>
                 </Button>
               </>
             )}

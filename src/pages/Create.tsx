@@ -18,6 +18,7 @@ const Create = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string>("");
   const [selectedCategory, setSelectedCategory] = useState<string>("");
+  const [selectedModelType, setSelectedModelType] = useState<string>("");
   const [selectedModel, setSelectedModel] = useState<string>("");
   const [selectedStyle, setSelectedStyle] = useState<string>("studio");
   const [prompt, setPrompt] = useState("");
@@ -55,43 +56,63 @@ const Create = () => {
   };
 
   const categories = [
-    { id: "ecommerce", name: "E-ticaret", description: "Genel ürün fotoğrafçılığı", icon: ShoppingBag },
     { id: "clothing", name: "Giyim", description: "Kıyafet ve aksesuar", icon: Shirt },
     { id: "jewelry", name: "Takı", description: "Yüzük, kolye ve aksesuarlar", icon: Gem },
     { id: "tech", name: "Teknoloji", description: "Elektronik aletler", icon: Smartphone },
     { id: "beauty", name: "Güzellik", description: "Kozmetik ve cilt bakımı", icon: Palette },
   ];
 
-  const modelsByCategory: Record<string, Array<{ id: string; name: string; type: string; description: string }>> = {
-    ecommerce: [
-      { id: "ecom-female-full", name: "Kadın Model", type: "Tam Boy", description: "Genel ürünler için" },
-      { id: "ecom-male-full", name: "Erkek Model", type: "Tam Boy", description: "Genel ürünler için" },
-      { id: "ecom-female-upper", name: "Kadın Model", type: "Üst Beden", description: "Ürün odaklı" },
-      { id: "ecom-male-upper", name: "Erkek Model", type: "Üst Beden", description: "Ürün odaklı" },
+  const modelTypes = [
+    { id: "female-full", name: "Kadın Tam Boy", icon: "👗" },
+    { id: "male-full", name: "Erkek Tam Boy", icon: "👔" },
+    { id: "female-upper", name: "Kadın Üst Beden", icon: "👚" },
+    { id: "male-upper", name: "Erkek Üst Beden", icon: "👕" },
+    { id: "female-face", name: "Kadın Yüz", icon: "👩" },
+    { id: "male-face", name: "Erkek Yüz", icon: "👨" },
+    { id: "female-hand", name: "Kadın El", icon: "✋" },
+    { id: "male-hand", name: "Erkek El", icon: "🖐️" },
+  ];
+
+  const modelsByType: Record<string, Array<{ id: string; name: string; imageUrl?: string }>> = {
+    "female-full": [
+      { id: "model-f1", name: "Model 1" },
+      { id: "model-f2", name: "Model 2" },
+      { id: "model-f3", name: "Model 3" },
+      { id: "model-f4", name: "Model 4" },
     ],
-    clothing: [
-      { id: "cloth-female-full", name: "Kadın Model", type: "Tam Boy", description: "Kıyafet gösterimi" },
-      { id: "cloth-male-full", name: "Erkek Model", type: "Tam Boy", description: "Kıyafet gösterimi" },
-      { id: "cloth-female-upper", name: "Kadın Model", type: "Üst Beden", description: "Üst giyim için" },
-      { id: "cloth-male-upper", name: "Erkek Model", type: "Üst Beden", description: "Üst giyim için" },
+    "male-full": [
+      { id: "model-m1", name: "Model 1" },
+      { id: "model-m2", name: "Model 2" },
+      { id: "model-m3", name: "Model 3" },
+      { id: "model-m4", name: "Model 4" },
     ],
-    jewelry: [
-      { id: "jewel-female-face", name: "Kadın Model", type: "Yüz", description: "Küpe ve kolye için" },
-      { id: "jewel-male-face", name: "Erkek Model", type: "Yüz", description: "Küpe ve kolye için" },
-      { id: "jewel-female-hand", name: "El Modeli", type: "Kadın", description: "Yüzük ve bilezik" },
-      { id: "jewel-male-hand", name: "El Modeli", type: "Erkek", description: "Yüzük ve bilezik" },
+    "female-upper": [
+      { id: "model-fu1", name: "Model 1" },
+      { id: "model-fu2", name: "Model 2" },
+      { id: "model-fu3", name: "Model 3" },
     ],
-    tech: [
-      { id: "tech-female-hand", name: "El Modeli", type: "Kadın", description: "Akıllı saat ve telefon" },
-      { id: "tech-male-hand", name: "El Modeli", type: "Erkek", description: "Akıllı saat ve telefon" },
-      { id: "tech-female-upper", name: "Kadın Model", type: "Üst Beden", description: "Kulaklık ve gözlük" },
-      { id: "tech-male-upper", name: "Erkek Model", type: "Üst Beden", description: "Kulaklık ve gözlük" },
+    "male-upper": [
+      { id: "model-mu1", name: "Model 1" },
+      { id: "model-mu2", name: "Model 2" },
+      { id: "model-mu3", name: "Model 3" },
     ],
-    beauty: [
-      { id: "beauty-female-face", name: "Kadın Model", type: "Yüz", description: "Makyaj ve cilt bakımı" },
-      { id: "beauty-male-face", name: "Erkek Model", type: "Yüz", description: "Erkek bakım ürünleri" },
-      { id: "beauty-female-hand", name: "El Modeli", type: "Kadın", description: "Oje ve el kremi" },
-      { id: "beauty-male-hand", name: "El Modeli", type: "Erkek", description: "El bakım ürünleri" },
+    "female-face": [
+      { id: "model-ff1", name: "Model 1" },
+      { id: "model-ff2", name: "Model 2" },
+      { id: "model-ff3", name: "Model 3" },
+    ],
+    "male-face": [
+      { id: "model-mf1", name: "Model 1" },
+      { id: "model-mf2", name: "Model 2" },
+      { id: "model-mf3", name: "Model 3" },
+    ],
+    "female-hand": [
+      { id: "model-fh1", name: "Model 1" },
+      { id: "model-fh2", name: "Model 2" },
+    ],
+    "male-hand": [
+      { id: "model-mh1", name: "Model 1" },
+      { id: "model-mh2", name: "Model 2" },
     ],
   };
 
@@ -229,6 +250,7 @@ const Create = () => {
                           key={category.id}
                           onClick={() => {
                             setSelectedCategory(category.id);
+                            setSelectedModelType("");
                             setSelectedModel("");
                           }}
                           className={`p-4 rounded-xl border-2 transition-all duration-300 text-left hover:scale-105 ${
@@ -247,29 +269,62 @@ const Create = () => {
                 </CardContent>
               </Card>
 
-              {/* Model Selection */}
+              {/* Model Type Selection */}
               {selectedCategory && (
                 <Card className="border-2 hover:border-accent/50 transition-all duration-300 animate-fade-in">
                   <CardContent className="p-6">
                     <Label className="text-base font-semibold mb-4 block flex items-center gap-2">
                       <span className="flex items-center justify-center w-7 h-7 rounded-full bg-accent text-accent-foreground text-sm">2</span>
-                      Model Seçin
+                      Model Tipi Seçin
                     </Label>
                     
-                    <div className="grid grid-cols-2 gap-3">
-                      {modelsByCategory[selectedCategory]?.map((model) => (
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                      {modelTypes.map((type) => (
                         <button
-                          key={model.id}
-                          onClick={() => setSelectedModel(model.id)}
-                          className={`p-4 rounded-xl border-2 transition-all duration-300 text-left hover:scale-105 ${
-                            selectedModel === model.id
+                          key={type.id}
+                          onClick={() => {
+                            setSelectedModelType(type.id);
+                            setSelectedModel("");
+                          }}
+                          className={`p-4 rounded-xl border-2 transition-all duration-300 hover:scale-105 ${
+                            selectedModelType === type.id
                               ? "border-accent bg-accent/10 shadow-lg"
                               : "border-border hover:border-accent/50"
                           }`}
                         >
-                          <div className="font-semibold text-sm mb-1">{model.name}</div>
-                          <div className="text-xs text-muted-foreground mb-1">{model.type}</div>
-                          <div className="text-xs text-muted-foreground">{model.description}</div>
+                          <div className="text-2xl mb-2 text-center">{type.icon}</div>
+                          <div className="font-semibold text-xs text-center">{type.name}</div>
+                        </button>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
+
+              {/* Specific Model Selection */}
+              {selectedModelType && (
+                <Card className="border-2 hover:border-primary/50 transition-all duration-300 animate-fade-in">
+                  <CardContent className="p-6">
+                    <Label className="text-base font-semibold mb-4 block flex items-center gap-2">
+                      <span className="flex items-center justify-center w-7 h-7 rounded-full bg-primary text-primary-foreground text-sm">3</span>
+                      Model Seçin
+                    </Label>
+                    
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                      {modelsByType[selectedModelType]?.map((model) => (
+                        <button
+                          key={model.id}
+                          onClick={() => setSelectedModel(model.id)}
+                          className={`p-4 rounded-xl border-2 transition-all duration-300 hover:scale-105 ${
+                            selectedModel === model.id
+                              ? "border-primary bg-primary/10 shadow-lg"
+                              : "border-border hover:border-primary/50"
+                          }`}
+                        >
+                          <div className="aspect-square bg-secondary rounded-lg mb-2 flex items-center justify-center text-4xl">
+                            👤
+                          </div>
+                          <div className="font-semibold text-xs text-center">{model.name}</div>
                         </button>
                       ))}
                     </div>
@@ -281,7 +336,7 @@ const Create = () => {
               <Card className="border-2 hover:border-primary/50 transition-all duration-300">
                 <CardContent className="p-6">
                   <Label className="text-base font-semibold mb-4 block flex items-center gap-2">
-                    <span className="flex items-center justify-center w-7 h-7 rounded-full bg-primary text-primary-foreground text-sm">3</span>
+                    <span className="flex items-center justify-center w-7 h-7 rounded-full bg-primary text-primary-foreground text-sm">4</span>
                     Ürün Fotoğrafını Yükleyin
                   </Label>
                   
@@ -346,7 +401,7 @@ const Create = () => {
               <Card className="border-2 hover:border-primary/50 transition-all duration-300">
                 <CardContent className="p-6">
                   <Label className="text-base font-semibold mb-4 block flex items-center gap-2">
-                    <span className="flex items-center justify-center w-7 h-7 rounded-full bg-primary text-primary-foreground text-sm">4</span>
+                    <span className="flex items-center justify-center w-7 h-7 rounded-full bg-primary text-primary-foreground text-sm">5</span>
                     Stil Seçin
                   </Label>
                   
@@ -373,7 +428,7 @@ const Create = () => {
               <Card className="border-2 hover:border-accent/50 transition-all duration-300">
                 <CardContent className="p-6">
                   <Label className="text-base font-semibold mb-4 block flex items-center gap-2">
-                    <span className="flex items-center justify-center w-7 h-7 rounded-full bg-accent text-accent-foreground text-sm">5</span>
+                    <span className="flex items-center justify-center w-7 h-7 rounded-full bg-accent text-accent-foreground text-sm">6</span>
                     Özel İstekler (Opsiyonel)
                   </Label>
                   
@@ -410,8 +465,8 @@ const Create = () => {
                   <div className="flex items-center justify-between py-3 px-4 rounded-lg bg-secondary/50">
                     <span className="text-sm font-medium text-muted-foreground">Model</span>
                     <span className="font-semibold">
-                      {selectedModel && selectedCategory 
-                        ? modelsByCategory[selectedCategory]?.find(m => m.id === selectedModel)?.name + " - " + modelsByCategory[selectedCategory]?.find(m => m.id === selectedModel)?.type
+                      {selectedModel && selectedModelType
+                        ? modelsByType[selectedModelType]?.find(m => m.id === selectedModel)?.name
                         : "Seçilmedi"}
                     </span>
                   </div>

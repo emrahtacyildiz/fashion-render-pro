@@ -2,6 +2,8 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import Header from "@/components/Header";
+import Footer from "@/components/Footer";
+import CookieConsent from "@/components/CookieConsent";
 import { ArrowRight, Sparkles, Zap, Users, Check } from "lucide-react";
 import heroImage from "@/assets/hero-image-new.jpg";
 import modelsGallery from "@/assets/models-gallery-new.jpg";
@@ -32,7 +34,7 @@ const Index = () => {
               
               <div className="flex flex-col sm:flex-row gap-4">
                 <Button size="xl" variant="hero" asChild>
-                  <Link to="/auth">
+                  <Link to="/auth?mode=signup">
                     Ücretsiz Deneyin
                     <ArrowRight className="ml-2 h-5 w-5" />
                   </Link>
@@ -139,7 +141,7 @@ const Index = () => {
           
           <div className="text-center mt-12">
             <Button size="lg" variant="hero" asChild>
-              <Link to="/create">
+              <Link to="/auth?mode=signup">
                 Şimdi Deneyin
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Link>
@@ -159,7 +161,7 @@ const Index = () => {
               İlk 5 görseliniz ücretsiz. Kredi kartı gerekmez.
             </p>
             <Button size="xl" variant="secondary" asChild>
-              <Link to="/auth">
+              <Link to="/auth?mode=signup">
                 Ücretsiz Hesap Oluşturun
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Link>
@@ -168,20 +170,8 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="border-t border-border py-12">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-            <div className="flex items-center gap-2">
-              <Sparkles className="h-5 w-5 text-primary" />
-              <span className="font-semibold">ShipShack</span>
-            </div>
-            <p className="text-sm text-muted-foreground">
-              © 2025 ShipShack. Tüm hakları saklıdır.
-            </p>
-          </div>
-        </div>
-      </footer>
+      <Footer />
+      <CookieConsent />
     </div>
   );
 };
