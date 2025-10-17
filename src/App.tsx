@@ -9,6 +9,8 @@ import Auth from "./pages/Auth";
 import Dashboard from "./pages/Dashboard";
 import Create from "./pages/Create";
 import Pricing from "./pages/Pricing";
+import Blog from "./pages/Blog";
+import BlogPost from "./pages/BlogPost";
 import Terms from "./pages/Terms";
 import Privacy from "./pages/Privacy";
 import Cookies from "./pages/Cookies";
@@ -28,6 +30,8 @@ const App = () => (
           <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
           <Route path="/create" element={<ProtectedRoute><Create /></ProtectedRoute>} />
           <Route path="/pricing" element={<Pricing />} />
+          <Route path="/blog" element={<Blog />} />
+          <Route path="/blog/:id" element={<BlogPost />} />
           <Route path="/terms" element={<Terms />} />
           <Route path="/privacy" element={<Privacy />} />
           <Route path="/cookies" element={<Cookies />} />

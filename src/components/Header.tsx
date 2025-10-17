@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Sparkles, User, LogOut } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
+import ThemeToggle from "@/components/ThemeToggle";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -25,6 +26,12 @@ const Header = () => {
             <Link to="/" className="text-sm font-medium text-foreground hover:text-primary transition-colors">
               Ana Sayfa
             </Link>
+            <Link to="/#value-section" className="text-sm font-medium text-foreground hover:text-primary transition-colors">
+              Neden ShipShack?
+            </Link>
+            <Link to="/blog" className="text-sm font-medium text-foreground hover:text-primary transition-colors">
+              Blog
+            </Link>
             <Link to="/pricing" className="text-sm font-medium text-foreground hover:text-primary transition-colors">
               Fiyatlandırma
             </Link>
@@ -36,6 +43,7 @@ const Header = () => {
           </nav>
           
           <div className="flex items-center gap-3">
+            <ThemeToggle />
             {user ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>

@@ -4,8 +4,9 @@ import { Card } from "@/components/ui/card";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import CookieConsent from "@/components/CookieConsent";
-import { ArrowRight, Sparkles, Zap, Users, Check } from "lucide-react";
-import heroImage from "@/assets/hero-image-new.jpg";
+import { ArrowRight, Sparkles, Zap, Users, Check, TrendingUp, ShieldCheck, Award } from "lucide-react";
+import heroTshirt from "@/assets/hero-tshirt-comparison.jpg";
+import heroJewelry from "@/assets/hero-jewelry-comparison.jpg";
 import modelsGallery from "@/assets/models-gallery-new.jpg";
 
 const Index = () => {
@@ -56,14 +57,134 @@ const Index = () => {
               </div>
             </div>
             
-            <div className="relative group">
-              <div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-accent/20 blur-3xl opacity-30 group-hover:opacity-50 transition-opacity duration-500"></div>
-              <div className="relative overflow-hidden rounded-2xl shadow-2xl">
-                <img 
-                  src={heroImage} 
-                  alt="AI ile ürün görselleştirme - tişört görseli profesyonel modele giydiriliyor" 
-                  className="relative w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700"
-                />
+            <div className="space-y-8">
+              <div className="relative group">
+                <div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-accent/20 blur-3xl opacity-30 group-hover:opacity-50 transition-opacity duration-500"></div>
+                <div className="relative overflow-hidden rounded-2xl shadow-2xl">
+                  <img 
+                    src={heroTshirt} 
+                    alt="AI ile tişört ürün görseli - düz ürün fotoğrafından profesyonel model fotoğrafına dönüşüm" 
+                    className="relative w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700"
+                  />
+                </div>
+              </div>
+              
+              <div className="relative group">
+                <div className="absolute inset-0 bg-gradient-to-r from-accent/20 to-primary/20 blur-3xl opacity-30 group-hover:opacity-50 transition-opacity duration-500"></div>
+                <div className="relative overflow-hidden rounded-2xl shadow-2xl">
+                  <img 
+                    src={heroJewelry} 
+                    alt="AI ile takı ürün görseli - kolye fotoğrafından profesyonel model fotoğrafına dönüşüm" 
+                    className="relative w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Value Proposition Section */}
+      <section id="value-section" className="py-20 sm:py-32 bg-gradient-to-br from-background via-accent/5 to-primary/5">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl sm:text-4xl font-bold mb-4">
+              E-Ticarette Görseller, Satışın Anahtarıdır
+            </h2>
+            <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
+              Müşterileriniz ürünü ellerine alamıyor. Görseller, onların tek rehberi. 
+              ShipShack ile farkı yaratın, satışlarınızı katlayın.
+            </p>
+          </div>
+
+          <div className="max-w-6xl mx-auto space-y-24">
+            {/* First Row - Image Left */}
+            <div className="grid lg:grid-cols-2 gap-12 items-center">
+              <div className="relative group order-2 lg:order-1">
+                <div className="absolute -inset-4 bg-gradient-to-r from-primary/20 to-accent/20 rounded-3xl blur-2xl opacity-30 group-hover:opacity-50 transition-opacity"></div>
+                <Card className="relative p-8 bg-gradient-to-br from-card to-card/50 border-2">
+                  <div className="text-6xl font-bold text-primary mb-4">%86</div>
+                  <p className="text-xl font-semibold mb-2">Müşteri Kararı</p>
+                  <p className="text-muted-foreground">
+                    E-ticaret müşterilerinin %86'sı ürün görseline bakarak satın alma kararı veriyor.
+                    Kaliteli görseller olmadan, satışlarınız yarı yarıya düşer.
+                  </p>
+                </Card>
+              </div>
+              
+              <div className="order-1 lg:order-2 space-y-6">
+                <div className="flex items-start gap-4">
+                  <div className="h-12 w-12 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
+                    <TrendingUp className="h-6 w-6 text-primary" />
+                  </div>
+                  <div>
+                    <h3 className="text-2xl font-bold mb-2">Satışları %200 Artırın</h3>
+                    <p className="text-muted-foreground">
+                      Profesyonel model görselleri kullanan e-ticaret siteleri, 
+                      ortalama %200 daha fazla satış yapıyor. Model, stüdyo ve 
+                      fotoğrafçı maliyeti olmadan bu fırsatı kaçırmayın.
+                    </p>
+                  </div>
+                </div>
+                
+                <div className="flex items-start gap-4">
+                  <div className="h-12 w-12 rounded-xl bg-accent/10 flex items-center justify-center flex-shrink-0">
+                    <ShieldCheck className="h-6 w-6 text-accent" />
+                  </div>
+                  <div>
+                    <h3 className="text-2xl font-bold mb-2">Güven ve İtibar</h3>
+                    <p className="text-muted-foreground">
+                      Profesyonel görseller, markanıza güvenilirlik kazandırır. 
+                      Müşteriler, kaliteli görsellere sahip mağazalardan alışveriş 
+                      yapmayı tercih eder ve iade oranları düşer.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Second Row - Image Right */}
+            <div className="grid lg:grid-cols-2 gap-12 items-center">
+              <div className="space-y-6">
+                <div className="flex items-start gap-4">
+                  <div className="h-12 w-12 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
+                    <Award className="h-6 w-6 text-primary" />
+                  </div>
+                  <div>
+                    <h3 className="text-2xl font-bold mb-2">Rekabette Öne Çıkın</h3>
+                    <p className="text-muted-foreground">
+                      Aynı ürünü satan onlarca rakibiniz var. Fark yaratan tek şey: 
+                      görseller. ShipShack ile rakiplerinizden %90 daha düşük 
+                      maliyetle profesyonel görsellere sahip olun.
+                    </p>
+                  </div>
+                </div>
+                
+                <div className="flex items-start gap-4">
+                  <div className="h-12 w-12 rounded-xl bg-accent/10 flex items-center justify-center flex-shrink-0">
+                    <Sparkles className="h-6 w-6 text-accent" />
+                  </div>
+                  <div>
+                    <h3 className="text-2xl font-bold mb-2">ShipShack ile Kolay Çözüm</h3>
+                    <p className="text-muted-foreground">
+                      Model kiralama, stüdyo rezervasyonu, fotoğrafçı bulamama 
+                      derdi yok. Sadece ürün fotoğrafını yükleyin, AI 30 saniyede 
+                      profesyonel model görseli oluştursun. Hemen başlayın!
+                    </p>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="relative group">
+                <div className="absolute -inset-4 bg-gradient-to-l from-primary/20 to-accent/20 rounded-3xl blur-2xl opacity-30 group-hover:opacity-50 transition-opacity"></div>
+                <Card className="relative p-8 bg-gradient-to-bl from-card to-card/50 border-2">
+                  <div className="text-6xl font-bold text-accent mb-4">%90</div>
+                  <p className="text-xl font-semibold mb-2">Maliyet Tasarrufu</p>
+                  <p className="text-muted-foreground">
+                    Geleneksel fotoğraf çekimi binlerce lira tutar. ShipShack ile 
+                    %90'a varan maliyet tasarrufu yaparak bütçenizi satışlara yatırın.
+                  </p>
+                </Card>
               </div>
             </div>
           </div>
