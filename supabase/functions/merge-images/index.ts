@@ -50,13 +50,18 @@ serve(async (req) => {
       return 'image/jpeg';
     };
 
+    // Convert blobs to ArrayBuffer first for proper encoding
+    const [productArrayBuffer, modelArrayBuffer] = await Promise.all([
+      productBlob.arrayBuffer(),
+      modelBlob.arrayBuffer()
+    ]);
+
     const productMimeType = getMimeType(productBlob, productImageUrl);
     const modelMimeType = getMimeType(modelBlob, modelImageUrl);
 
-    const [productBase64, modelBase64] = await Promise.all([
-      blobToBase64(productBlob),
-      blobToBase64(modelBlob)
-    ]);
+    // Convert ArrayBuffer to base64
+    const productBase64 = arrayBufferToBase64(productArrayBuffer);
+    const modelBase64 = arrayBufferToBase64(modelArrayBuffer);
 
     // Create category-specific prompt for better results
     const categoryPrompts: Record<string, string> = {
@@ -176,11 +181,11 @@ serve(async (req) => {
 });
 
 // Helper functions
-async function blobToBase64(blob: Blob): Promise<string> {
-  const buffer = await blob.arrayBuffer();
+function arrayBufferToBase64(buffer: ArrayBuffer): string {
   const bytes = new Uint8Array(buffer);
   let binary = '';
-  for (let i = 0; i < bytes.byteLength; i++) {
+  const len = bytes.byteLength;
+  for (let i = 0; i < len; i++) {
     binary += String.fromCharCode(bytes[i]);
   }
   return btoa(binary);

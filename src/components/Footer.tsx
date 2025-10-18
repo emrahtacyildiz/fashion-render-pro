@@ -77,7 +77,7 @@ const Footer = () => {
 
         <div className="pt-8 border-t border-border">
           <p className="text-sm text-muted-foreground text-center">
-            © 2025 ShipShack. Tüm hakları saklıdır.
+            © 2025 Akare Digital. Tüm hakları saklıdır.
           </p>
         </div>
       </div>
