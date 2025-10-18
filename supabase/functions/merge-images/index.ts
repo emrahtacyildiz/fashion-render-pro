@@ -36,6 +36,23 @@ serve(async (req) => {
       modelResponse.blob()
     ]);
 
+    // Determine proper MIME types based on image format
+    const getMimeType = (blob: Blob, url: string): string => {
+      // Check file extension if blob.type is not reliable
+      if (url.toLowerCase().endsWith('.png')) return 'image/png';
+      if (url.toLowerCase().endsWith('.jpg') || url.toLowerCase().endsWith('.jpeg')) return 'image/jpeg';
+      if (url.toLowerCase().endsWith('.webp')) return 'image/webp';
+      
+      // Fallback to blob type if it's a valid image type
+      if (blob.type && blob.type.startsWith('image/')) return blob.type;
+      
+      // Default to JPEG
+      return 'image/jpeg';
+    };
+
+    const productMimeType = getMimeType(productBlob, productImageUrl);
+    const modelMimeType = getMimeType(modelBlob, modelImageUrl);
+
     const [productBase64, modelBase64] = await Promise.all([
       blobToBase64(productBlob),
       blobToBase64(modelBlob)
@@ -67,13 +84,13 @@ serve(async (req) => {
               { text: prompt },
               {
                 inline_data: {
-                  mime_type: productBlob.type,
+                  mime_type: productMimeType,
                   data: productBase64
                 }
               },
               {
                 inline_data: {
-                  mime_type: modelBlob.type,
+                  mime_type: modelMimeType,
                   data: modelBase64
                 }
               }

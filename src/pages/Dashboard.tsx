@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 import { Plus, Image as ImageIcon, Download } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
@@ -64,6 +65,32 @@ const Dashboard = () => {
       });
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleDeleteProject = async (projectId: string) => {
+    if (!confirm("Bu projeyi silmek istediğinizden emin misiniz?")) return;
+    
+    try {
+      const { error } = await supabase
+        .from('projects')
+        .delete()
+        .eq('id', projectId);
+      
+      if (error) throw error;
+      
+      toast({
+        title: "Başarılı",
+        description: "Proje silindi"
+      });
+      
+      fetchData();
+    } catch (error: any) {
+      toast({
+        title: "Hata",
+        description: error.message || "Proje silinirken bir hata oluştu",
+        variant: "destructive"
+      });
     }
   };
 
@@ -168,6 +195,16 @@ const Dashboard = () => {
                           <Download className="h-4 w-4" />
                         </Button>
                       </a>
+                      <Button 
+                        size="sm" 
+                        variant="destructive"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          handleDeleteProject(project.id);
+                        }}
+                      >
+                        Sil
+                      </Button>
                     </div>
                   )}
                 </div>
@@ -186,6 +223,8 @@ const Dashboard = () => {
           </div>
         )}
       </div>
+      
+      <Footer />
     </div>
   );
 };
