@@ -78,6 +78,15 @@ const Create = () => {
     }
   };
 
+  const getGarmentType = (category: Category): 'dress' | 'upper' | 'lower' => {
+    if (category === 'clothing') {
+      if (selectedModel?.includes('fullbody')) return 'dress';
+      if (selectedModel?.includes('upper')) return 'upper';
+      return 'dress';
+    }
+    return 'upper';
+  };
+
   const handleGenerate = async () => {
     if (!category || !selectedModel || !productImage || !projectName.trim()) {
       toast.error("Lütfen tüm alanları doldurun");
@@ -92,8 +101,8 @@ const Create = () => {
 
     try {
       setIsGenerating(true);
+      toast.info("Görsel oluşturuluyor, bu 1-2 dakika sürebilir...");
 
-      // Check credits
       const { data: creditsData, error: creditsError } = await supabase
         .from("credits")
         .select("balance")
@@ -108,7 +117,6 @@ const Create = () => {
         return;
       }
 
-      // Upload product image
       const productFileName = `${user.id}/${Date.now()}-product-${productImage.name}`;
       const { error: uploadError } = await supabase.storage
         .from("product-images")
@@ -120,7 +128,6 @@ const Create = () => {
         .from("product-images")
         .getPublicUrl(productFileName);
 
-      // Get model image URL
       const modelImageMap: Record<string, string> = {
         "male-fullbody": maleFullbody,
         "female-fullbody": femaleFullbody,
@@ -132,18 +139,16 @@ const Create = () => {
         "female-beauty": femaleBeauty,
       };
 
-      // Convert model image to blob and upload to get public URL
       const modelImagePath = modelImageMap[selectedModel];
       const modelBlob = await fetch(modelImagePath).then(r => r.blob());
       const modelFileName = `models/${selectedModel}.jpg`;
-      
-      // Upload model image if not already uploaded
+
       const { data: existingModel } = await supabase.storage
         .from("product-images")
         .list("models");
-      
+
       const modelExists = existingModel?.some(f => f.name === `${selectedModel}.jpg`);
-      
+
       if (!modelExists) {
         await supabase.storage
           .from("product-images")
@@ -154,19 +159,22 @@ const Create = () => {
         .from("product-images")
         .getPublicUrl(modelFileName);
 
-      // Call merge-images edge function
-      const { data: mergeData, error: mergeError } = await supabase.functions.invoke('merge-images', {
+      const garmentType = getGarmentType(category);
+
+      const { data: klingData, error: klingError } = await supabase.functions.invoke('kling-try-on', {
         body: {
-          productImageUrl: productUrl,
           modelImageUrl: modelUrl,
-          category: category
+          productImageUrl: productUrl,
+          garmentType: garmentType,
+          batchSize: 1
         }
       });
 
-      if (mergeError) throw mergeError;
-      if (!mergeData?.imageUrl) throw new Error("Görsel oluşturulamadı");
+      if (klingError) throw klingError;
+      if (!klingData?.success || !klingData?.imageUrls || klingData.imageUrls.length === 0) {
+        throw new Error("Görsel oluşturulamadı");
+      }
 
-      // Create project record
       const { data: projectData, error: projectError } = await supabase
         .from("projects")
         .insert({
@@ -175,24 +183,22 @@ const Create = () => {
           product_image_url: productUrl,
           model_id: selectedModel,
           style_id: category,
-          prompt: `Generated with ${category} category and ${selectedModel} model`,
+          prompt: `Generated with ${category} category and ${selectedModel} model using Kling AI`,
         })
         .select()
         .single();
-      
-      // Store generated image
+
       if (projectData) {
         await supabase
           .from("generated_images")
           .insert({
             project_id: projectData.id,
-            image_url: mergeData.imageUrl,
+            image_url: klingData.imageUrls[0],
           });
       }
 
       if (projectError) throw projectError;
 
-      // Deduct credit
       await supabase
         .from("credits")
         .update({ balance: creditsData.balance - 1 })
