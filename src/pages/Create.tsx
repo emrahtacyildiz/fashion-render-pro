@@ -154,8 +154,8 @@ const Create = () => {
         .from("product-images")
         .getPublicUrl(modelFileName);
 
-      // Call merge-images edge function
-      const { data: mergeData, error: mergeError } = await supabase.functions.invoke('merge-images', {
+      // Call kling-tryon edge function
+      const { data: mergeData, error: mergeError } = await supabase.functions.invoke('kling-tryon', {
         body: {
           productImageUrl: productUrl,
           modelImageUrl: modelUrl,
