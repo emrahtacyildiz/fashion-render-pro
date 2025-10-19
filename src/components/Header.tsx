@@ -1,12 +1,13 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Sparkles, User, LogOut } from "lucide-react";
+import { Sparkles, User, LogOut, Settings as SettingsIcon, LayoutDashboard } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import ThemeToggle from "@/components/ThemeToggle";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
@@ -23,9 +24,6 @@ const Header = () => {
           </Link>
           
           <nav className="hidden md:flex items-center gap-8">
-            <Link to="/" className="text-sm font-medium text-foreground hover:text-primary transition-colors">
-              Ana Sayfa
-            </Link>
             <Link to="/#value-section" className="text-sm font-medium text-foreground hover:text-primary transition-colors">
               Neden ShipShack?
             </Link>
@@ -35,11 +33,6 @@ const Header = () => {
             <Link to="/pricing" className="text-sm font-medium text-foreground hover:text-primary transition-colors">
               Fiyatlandırma
             </Link>
-            {user && (
-              <Link to="/dashboard" className="text-sm font-medium text-foreground hover:text-primary transition-colors">
-                Dashboard
-              </Link>
-            )}
           </nav>
           
           <div className="flex items-center gap-3">
@@ -52,7 +45,20 @@ const Header = () => {
                     Hesabım
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
+                <DropdownMenuContent align="end" className="w-56">
+                  <DropdownMenuItem asChild>
+                    <Link to="/dashboard" className="flex items-center cursor-pointer">
+                      <LayoutDashboard className="mr-2 h-4 w-4" />
+                      Dashboard
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link to="/settings" className="flex items-center cursor-pointer">
+                      <SettingsIcon className="mr-2 h-4 w-4" />
+                      Hesap Ayarları
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
                   <DropdownMenuItem onClick={() => signOut()}>
                     <LogOut className="mr-2 h-4 w-4" />
                     Çıkış Yap

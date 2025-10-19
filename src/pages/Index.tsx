@@ -15,10 +15,10 @@ const Index = () => {
       <Header />
       
       {/* Hero Section */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-background via-background to-primary/5 py-20 sm:py-32">
+      <section className="relative overflow-hidden bg-gradient-to-br from-background via-primary/5 to-accent/5 py-16 sm:py-24">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <div className="space-y-8">
+          <div className="grid lg:grid-cols-2 gap-8 items-center">
+            <div className="space-y-6 lg:space-y-8">
               <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-medium">
                 <Sparkles className="h-4 w-4" />
                 AI Destekli Ürün Görselleştirme
@@ -57,26 +57,40 @@ const Index = () => {
               </div>
             </div>
             
-            <div className="space-y-8">
-              <div className="relative group">
-                <div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-accent/20 blur-3xl opacity-30 group-hover:opacity-50 transition-opacity duration-500"></div>
-                <div className="relative overflow-hidden rounded-2xl shadow-2xl">
-                  <img 
-                    src={heroTshirt} 
-                    alt="AI ile tişört ürün görseli - düz ürün fotoğrafından profesyonel model fotoğrafına dönüşüm" 
-                    className="relative w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700"
-                  />
+            <div className="relative">
+              <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-accent/10 to-primary/5 blur-3xl"></div>
+              <div className="relative grid grid-cols-2 gap-4">
+                <div className="space-y-4">
+                  <div className="relative group overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1">
+                    <img 
+                      src={heroTshirt} 
+                      alt="AI ile tişört ürün görseli" 
+                      className="w-full h-auto object-cover"
+                    />
+                  </div>
+                  <div className="relative group overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 mt-8">
+                    <img 
+                      src={heroJewelry} 
+                      alt="AI ile takı ürün görseli" 
+                      className="w-full h-auto object-cover"
+                    />
+                  </div>
                 </div>
-              </div>
-              
-              <div className="relative group">
-                <div className="absolute inset-0 bg-gradient-to-r from-accent/20 to-primary/20 blur-3xl opacity-30 group-hover:opacity-50 transition-opacity duration-500"></div>
-                <div className="relative overflow-hidden rounded-2xl shadow-2xl">
-                  <img 
-                    src={heroJewelry} 
-                    alt="AI ile takı ürün görseli - kolye fotoğrafından profesyonel model fotoğrafına dönüşüm" 
-                    className="relative w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700"
-                  />
+                <div className="space-y-4 mt-12">
+                  <div className="relative group overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1">
+                    <img 
+                      src={heroJewelry} 
+                      alt="AI ile takı ürün görseli" 
+                      className="w-full h-auto object-cover"
+                    />
+                  </div>
+                  <div className="relative group overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1">
+                    <img 
+                      src={heroTshirt} 
+                      alt="AI ile tişört ürün görseli" 
+                      className="w-full h-auto object-cover"
+                    />
+                  </div>
                 </div>
               </div>
             </div>
