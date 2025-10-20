@@ -67,12 +67,12 @@ serve(async (req) => {
 
     // The API returns a task that we need to poll for results
     // For now, we'll return the task info
-    if (!result.data?.taskId) {
+    if (!result.data?.task_id) {
       throw new Error('No task ID received from Kling API');
     }
 
     // Poll for task completion
-    const taskId = result.data.taskId;
+    const taskId = result.data.task_id;
     let attempts = 0;
     const maxAttempts = 60; // 60 attempts * 2 seconds = 2 minutes max
     
